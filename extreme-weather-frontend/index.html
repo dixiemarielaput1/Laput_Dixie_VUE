@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+  <title>Weather Report App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato%7CRaleway" rel="stylesheet" />
+  <link href="css/grid.css" rel="stylesheet" />
+  <script defer src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body class="bg-gray-50">
+  <header class="bg-blue-700 text-white shadow-md p-6 w-full flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex">
+    
+      <img src="images/sun.svg" alt="Company Logo" class="w-10 h-10 mr-4" />
+
+      <h1 class="text-3xl font-bold tracking-wide">WeatherRecord Conditions Inc.</h1>
+    </div>
+    <div class="text-sm md:text-right">
+      <p>Accurate. Real-Time. Trusted Worldwide.</p>
+      <p class="italic">Updated every 15 minutes</p>
+    </div>
+  </header>
+
+  <div id="app" class="container mx-auto p-4 space-y-6 mt-10">
+    <div class="flex flex-col lg:flex-row gap-6 h-[80vh]">
+      <div class="lg:w-1/3 p-4 bg-white rounded-lg shadow-lg max-h-full space-y-4">
+        <div id="weatherReportCon">
+          <h2 class="text-2xl font-bold sticky top-0 bg-white py-2 z-10 border-b-2 border-gray-300 mb-2">Weather Reports</h2>
+          <p class="text-gray-700 mt-2">Explore weather reports from various locations.</p>
+          <p class="text-gray-700">Click on a report to find out more!</p>
+
+          <div v-if="loadingReports" class="flex justify-center">
+            <svg class="loader w-16 h-16 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="80" stroke="#60a5fa" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="502" stroke-dashoffset="200"/>
+            </svg>
+          </div>
+
+          <ul id="weather-report-list" class="space-y-4 mt-5 overflow-y-auto max-h-[calc(80vh-200px)]">
+            <li v-for="report in reportsData" :key="report.id" class="bg-gray-100 p-4 border rounded-lg hover:bg-blue-50 transition">
+              <h3 class="text-lg font-semibold">
+                <a href="#weatherReport" class="text-blue-600 hover:underline" @click="getWeatherReport(report.id)">
+                  {{ report.title }}
+                </a>
+              </h3>
+              <p class="text-sm text-gray-600">{{ report.location }} - {{ report.reported_date }}</p>
+              <p class="text-gray-700">{{ report.description }}</p>
+            </li>
+          </ul>
+
+     
+          <section v-if="error" class="text-red-600">
+            {{ error }}
+          </section>
+        </div>
+      </div>
+
+  
+      <div class="lg:w-2/3 h-full bg-white relative overflow-hidden rounded-lg shadow-lg">
+        <div id="map" class="h-full w-full rounded-lg relative">
+        </div>
+      </div>
+
+    </div>
+
+
+    
+  <div v-if="selectedReport" class="bg-white p-6 rounded-lg shadow-lg mt-6 ">
+    <h2 class="text-2xl font-bold mb-4">Weather Report Details</h2>
+    <div class="flex flex-col items-left">
+      <img :src="`images/${selectedReport.weather_image}`" alt="weather image" class="mt-2 w-full lg:w-2/3 h-auto object-cover rounded-lg shadow-md" />
+      <p class="text-gray-700 text-left mt-2">{{ selectedReport.description }}</p>
+    </div>
+  </div>
+
+  </div>
+
+
+  <footer class="bg-blue-700 text-white shadow-md p-6 w-full flex justify-center items-center gap-4 mt-10">
+    <p class="text-center text-sm">&copy; 2025 WeatherRecord Conditions Inc. | All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>
